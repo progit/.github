@@ -1,0 +1,5 @@
+{
+    "name": "Progit books PR checks",
+    "description": "Builds and checks that new PR do not break the book structure",
+    "iconName": "progit"
+}

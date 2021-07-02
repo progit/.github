@@ -1,0 +1,5 @@
+{
+    "name": "Progit books publishing workflow",
+    "description": "Builds, tags and releases the book",
+    "iconName": "progit"
+}
