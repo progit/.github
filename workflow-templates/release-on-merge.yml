@@ -2,7 +2,7 @@ name: Release on push to main
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
 
 jobs:
   release:
@@ -22,6 +22,8 @@ jobs:
         LASTPATCH=$(git describe --tags | cut -d- -f1 | cut -d. -f3)
         PATCH=$(($LASTPATCH+1))
         echo "::set-output name=tagname::2.1.${PATCH}"
+        echo "::set-output name=branch::${GITHUB_REF#refs/heads/}"
+
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
@@ -29,12 +31,12 @@ jobs:
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
     - name: Build release assets
-      run: bundle exec rake book:build
+      run: bundle exec rake book:build_action
 
     - name: Create release
       uses: ncipollo/release-action@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ steps.compute-tag.outputs.tagname }}
-        commit: main
+        commit: ${{ steps.compute-tag.outputs.branch }}
         artifacts: './progit.epub,./progit.mobi,./progit.pdf,./progit.html'
